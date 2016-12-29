@@ -9,13 +9,16 @@ public class DimensionDataObject {
 	public int dimID;
 	public int loadedChunks; //TODO Maybe change this to a List of chunks instead. Similar to the lists below.
 	
-	public List<PlayerDataObject> playerList; //list of ALL players
-	public List<TileDataObject> tileList; // list of ALL TileEntities
-	//TODO public List etc. //list of ALL entities
+	public List<ChunkDataObject> loadedChunkList; //list of ALL loaded Chunks
+	public List<PlayerDataObject> playerList; //list of ALL Players
+	public List<TileDataObject> tileList; //list of ALL TileEntities
+	public List<EntityDataObject> entityList; //list of ALL Entities 
 	
 	
 	public DimensionDataObject(){
+		loadedChunkList = new ArrayList<ChunkDataObject>();
 		playerList = new ArrayList<PlayerDataObject>();
 		tileList = new ArrayList<TileDataObject>();
+		entityList = new ArrayList<EntityDataObject>();
 	}
 }

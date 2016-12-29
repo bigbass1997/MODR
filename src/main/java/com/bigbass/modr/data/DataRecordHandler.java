@@ -1,8 +1,16 @@
 package com.bigbass.modr.data;
 
+import java.util.List;
+
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.WorldServer;
+import net.minecraft.world.chunk.Chunk;
 
 public class DataRecordHandler {
 	
@@ -43,6 +51,24 @@ public class DataRecordHandler {
 			dimData.dimID = world.provider.dimensionId;
 			dimData.loadedChunks = world.theChunkProviderServer.getLoadedChunkCount();
 			
+			for(Object obj : world.theChunkProviderServer.loadedChunks){
+				if(obj instanceof Chunk){
+					Chunk chunk = (Chunk) obj;
+					ChunkDataObject chunkData = new ChunkDataObject();
+					
+					chunkData.x = chunk.xPosition;
+					chunkData.z = chunk.zPosition;
+					
+					chunkData.entities = 0;
+					for(List<?> list : chunk.entityLists){
+						chunkData.entities += list.size();
+					}
+					
+					chunkData.tiles = chunk.chunkTileEntityMap.size();
+					
+					dimData.loadedChunkList.add(chunkData);
+				}
+			}
 			
 			for(Object obj : world.playerEntities){
 				if(obj instanceof EntityPlayer){
@@ -59,7 +85,33 @@ public class DataRecordHandler {
 				}
 			}
 			
-			//TODO THIS IS NOT COMPLETE
+			for(Object obj : world.loadedTileEntityList){
+				if(obj instanceof TileEntity){
+					TileEntity tile = (TileEntity) obj;
+					TileDataObject tileData = new TileDataObject();
+					
+					tileData.name = tile.getClass().toString();
+					tileData.x = tile.xCoord;
+					tileData.y = tile.yCoord;
+					tileData.z = tile.zCoord;
+					
+					dimData.tileList.add(tileData);
+				}
+			}
+			
+			for(Object obj : world.loadedEntityList){
+				if(obj instanceof Entity){
+					Entity entity = (Entity) obj;
+					EntityDataObject entityData = new EntityDataObject();
+					
+					entityData.name = entity.getClass().toString();
+					entityData.x = entity.posX;
+					entityData.y = entity.posY;
+					entityData.z = entity.posZ;
+					
+					dimData.entityList.add(entityData);
+				}
+			}
 			
 			record.dimensionList.add(dimData);
 		}
@@ -67,10 +119,15 @@ public class DataRecordHandler {
 		isPopulated = true;
 	}
 	
+	public String formatToJson(){
+		Gson gson = (new GsonBuilder()).create();
+		
+		return gson.toJson(record);
+	}
+	
 	/*
 	 * TODO Create methods for: 
 	 * Formatting data to transmit to MongoDB
 	 * Save data to a file
-	 * Populating the record, porting code from https://github.com/CyberdyneCC/Thermos/blob/master/src/main/java/net/minecraftforge/cauldron/CauldronHooks.java#L393
 	 */
 }
