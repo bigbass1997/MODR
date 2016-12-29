@@ -32,6 +32,7 @@ public class DataRecordHandler {
 	 * </p>
 	 */
 	public void populateRecord(){
+		// Attempting to populate again may cause fragmented data for the record, and so is not allowed.
 		if(isPopulated){
 			return;
 		}
@@ -62,6 +63,8 @@ public class DataRecordHandler {
 			
 			record.dimensionList.add(dimData);
 		}
+		
+		isPopulated = true;
 	}
 	
 	/*
