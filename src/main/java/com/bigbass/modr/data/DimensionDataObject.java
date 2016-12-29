@@ -7,7 +7,6 @@ public class DimensionDataObject {
 	
 	public String name;
 	public int dimID;
-	public int loadedChunks; //TODO Maybe change this to a List of chunks instead. Similar to the lists below.
 	
 	public List<ChunkDataObject> loadedChunkList; //list of ALL loaded Chunks
 	public List<PlayerDataObject> playerList; //list of ALL Players

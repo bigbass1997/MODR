@@ -1,10 +1,14 @@
 package com.bigbass.modr.mongo;
 
+import org.bson.Document;
+
 import com.bigbass.modr.MODRMod;
 import com.bigbass.modr.config.Config;
 import com.bigbass.modr.config.MongoDBOptions;
+import com.bigbass.modr.data.DataRecordHandler;
 import com.mongodb.MongoClient;
 import com.mongodb.MongoClientURI;
+import com.mongodb.MongoException;
 
 /**
  * <p>Controller class for MongoDB operations.</p>
@@ -23,6 +27,8 @@ public class MongoController extends Thread {
 	
 	/** Is the MongoClient connected to the server or not */
 	private boolean connected = false;
+	
+	private DataRecordHandler handlerQueue;
 	
 	/**
 	 * Start the Thread as soon as it is created.
@@ -59,6 +65,22 @@ public class MongoController extends Thread {
 			} else {
 				connected = false;
 			}
+			
+			if(handlerQueue != null){
+				if(!connected){
+					MODRMod.log.error("Mod is not connected to the MongoDB server!");
+					writeRecordToFile();
+				}
+				try {
+					client.getDatabase(options.database).getCollection(options.collection).insertOne(Document.parse(handlerQueue.formatToJson()));
+				} catch(MongoException e){
+					MODRMod.log.error("Uploading data record to database has failed!");
+					e.printStackTrace();
+					writeRecordToFile();
+				}
+				
+				handlerQueue = null;
+			}
 		}
 		
 		client.close();
@@ -75,5 +97,14 @@ public class MongoController extends Thread {
 	
 	public MongoClient getCli(){
 		return client;
+	}
+	
+	public void uploadRecord(DataRecordHandler handler){
+		handlerQueue = handler;
+	}
+	
+	private void writeRecordToFile(){
+		MODRMod.log.error("Attempting to write data record to file...");
+		//TODO write handlerQueue to file
 	}
 }

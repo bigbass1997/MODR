@@ -1,5 +1,8 @@
 package com.bigbass.modr.data;
 
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 import com.google.gson.Gson;
@@ -49,7 +52,6 @@ public class DataRecordHandler {
 			DimensionDataObject dimData = new DimensionDataObject();
 			dimData.name = world.getWorldInfo().getWorldName();
 			dimData.dimID = world.provider.dimensionId;
-			dimData.loadedChunks = world.theChunkProviderServer.getLoadedChunkCount();
 			
 			for(Object obj : world.theChunkProviderServer.loadedChunks){
 				if(obj instanceof Chunk){
@@ -116,6 +118,9 @@ public class DataRecordHandler {
 			record.dimensionList.add(dimData);
 		}
 		
+		//Mark the record with a date and time of UTC timezone.
+		record.dateTime = LocalDateTime.now().atZone(ZoneId.of("UTC")).format(DateTimeFormatter.ofPattern("uuuu/MM/dd HH:mm:ss"));
+		
 		isPopulated = true;
 	}
 	
@@ -127,7 +132,6 @@ public class DataRecordHandler {
 	
 	/*
 	 * TODO Create methods for: 
-	 * Formatting data to transmit to MongoDB
 	 * Save data to a file
 	 */
 }

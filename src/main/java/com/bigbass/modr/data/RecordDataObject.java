@@ -10,6 +10,7 @@ import java.util.List;
 public class RecordDataObject {
 	
 	public List<DimensionDataObject> dimensionList;
+	public String dateTime;
 	
 	public RecordDataObject(){
 		dimensionList = new ArrayList<DimensionDataObject>();

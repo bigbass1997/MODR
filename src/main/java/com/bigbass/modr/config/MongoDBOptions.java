@@ -9,6 +9,7 @@ public class MongoDBOptions {
 
 	public String database;
 	public String authDatabase;
+	public String collection;
 	
 	public MongoDBOptions(){
 		hostname = "hostname";
@@ -19,5 +20,6 @@ public class MongoDBOptions {
 
 		database = "database_name";
 		authDatabase = "authentication_database_name";
+		collection = "collection_name";
 	}
 }
