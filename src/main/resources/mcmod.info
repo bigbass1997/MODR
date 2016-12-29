@@ -1,0 +1,16 @@
+[
+{
+  "modid": "modr",
+  "name": "Minecraft Object Data Recorder",
+  "description": "Server side only mod that periodically collects data about entities/TEs and uploads the data to a MongoDB database.",
+  "version": "${version}",
+  "mcversion": "${mcversion}",
+  "url": "",
+  "updateUrl": "",
+  "authorList": ["bigbass1997"],
+  "credits": "Sergey for original data collection code from Cauldron",
+  "logoFile": "",
+  "screenshots": [],
+  "dependencies": []
+}
+]
