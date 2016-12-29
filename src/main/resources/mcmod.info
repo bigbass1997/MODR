@@ -8,7 +8,7 @@
   "url": "",
   "updateUrl": "",
   "authorList": ["bigbass1997"],
-  "credits": "Sergey for original data collection code from Cauldron",
+  "credits": "Namikon. Sergey for original data collection code from Cauldron. MongoDB for providing such an easy and fast database software to store JSON like data.",
   "logoFile": "",
   "screenshots": [],
   "dependencies": []
