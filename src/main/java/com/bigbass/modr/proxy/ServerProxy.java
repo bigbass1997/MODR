@@ -4,10 +4,10 @@ import com.bigbass.modr.config.Config;
 import com.bigbass.modr.listeners.ServerTickEventListener;
 import com.bigbass.modr.mongo.MongoController;
 
+import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.event.FMLServerStoppingEvent;
-import net.minecraftforge.common.MinecraftForge;
 
 public class ServerProxy extends CommonProxy {
 	
@@ -20,7 +20,7 @@ public class ServerProxy extends CommonProxy {
 	public void init(FMLInitializationEvent e){
 		MongoController.getInstance();
 		
-		MinecraftForge.EVENT_BUS.register(new ServerTickEventListener());
+		FMLCommonHandler.instance().bus().register(new ServerTickEventListener());
 	}
 
 	@Override

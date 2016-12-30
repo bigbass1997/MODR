@@ -5,12 +5,13 @@ import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 
+import com.bigbass.modr.MODRMod;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
+import cpw.mods.fml.common.FMLCommonHandler;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.server.MinecraftServer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.WorldServer;
 import net.minecraft.world.chunk.Chunk;
@@ -47,8 +48,10 @@ public class DataRecordHandler {
 		if(isPopulated){
 			return;
 		}
+
+		long startTime = System.currentTimeMillis();
 		
-		for(WorldServer world : MinecraftServer.getServer().worldServers){
+		for(WorldServer world : FMLCommonHandler.instance().getMinecraftServerInstance().worldServers){
 			DimensionDataObject dimData = new DimensionDataObject();
 			dimData.name = world.getWorldInfo().getWorldName();
 			dimData.dimID = world.provider.dimensionId;
@@ -122,6 +125,8 @@ public class DataRecordHandler {
 		record.dateTime = LocalDateTime.now().atZone(ZoneId.of("UTC")).format(DateTimeFormatter.ofPattern("uuuu/MM/dd HH:mm:ss"));
 		
 		isPopulated = true;
+		
+		MODRMod.log.info("DataRecord populated in " + ((System.currentTimeMillis() - startTime) / 1000.0f) + " seconds");
 	}
 	
 	public String formatToJson(){
@@ -129,9 +134,4 @@ public class DataRecordHandler {
 		
 		return gson.toJson(record);
 	}
-	
-	/*
-	 * TODO Create methods for: 
-	 * Save data to a file
-	 */
 }

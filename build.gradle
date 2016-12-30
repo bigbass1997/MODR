@@ -26,9 +26,26 @@ minecraft {
     runDir = "eclipse"
 }
 
+configurations {
+	embedded
+	compile.extendsFrom embedded
+}
+
 dependencies {
-	compile 'org.mongodb:mongodb-driver:3.3.0'
+	embedded 'org.mongodb:mongodb-driver:3.3.0'
 	compile 'com.google.code.gson:gson:2.7'
+}
+
+runServer {
+	jvmArgs '-Djava.security.policy=mongo.policy'
+}
+
+jar {
+    configurations.embedded.each { dep ->
+        from(project.zipTree(dep)) {
+            exclude 'META-INF', 'META-INF/**'
+        }
+    }
 }
 
 processResources

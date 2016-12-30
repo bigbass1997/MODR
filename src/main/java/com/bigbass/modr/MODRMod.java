@@ -1,7 +1,6 @@
 package com.bigbass.modr;
 
 import java.io.File;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -16,7 +15,7 @@ import cpw.mods.fml.common.event.FMLServerStoppingEvent;
 @Mod(modid = MODRMod.MODID, version = MODRMod.VERSION, acceptableRemoteVersions = "*")
 public class MODRMod {
 	
-    public static final String MODID = "modr";
+    public static final String MODID = "MODR";
     public static final String VERSION = "0.0";
     
     public static final Logger log = LogManager.getLogger("MODR");
