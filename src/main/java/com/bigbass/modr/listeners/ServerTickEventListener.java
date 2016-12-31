@@ -22,16 +22,20 @@ public class ServerTickEventListener {
 	public void onServerTickEvent(ServerTickEvent e){
 		if(System.currentTimeMillis() - lastTime > interval){
 			//TODO surround this block with a try-catch block to prevent server crashes in case something does go wrong.
+			try {
+				MODRMod.log.info("Starting DataRecord population process..");
+				
+				DataRecordHandler dataHand = new DataRecordHandler();
+				
+				dataHand.populateRecord();
+				
+				MongoController.getInstance().uploadRecord(dataHand);
+			} catch(Exception ex) {
+				MODRMod.log.error("An unexpected exception has occured when trying to populate data record!");
+				ex.printStackTrace();
+			}
 			
-			MODRMod.log.info("Starting DataRecord population process..");
-			
-			DataRecordHandler dataHand = new DataRecordHandler();
-			
-			dataHand.populateRecord();
-			
-			MongoController.getInstance().uploadRecord(dataHand);
-			
-			lastTime = System.currentTimeMillis();
+			lastTime = System.currentTimeMillis(); // This is outside the try-catch block, to prevent the above from failing over and over.
 		}
 		
 		/*
@@ -40,8 +44,7 @@ public class ServerTickEventListener {
 		 * DO NOT WAIT FOR A RESPONSE!
 		 * Waiting for a response from the controller will stall the server until either timeout or successful transfer.
 		 * 
-		 * The controller will take care of any issues that happen. If the upload fails, it will use a
-		 * method in the DataRecordHandler to save as a file instead.
+		 * The controller will take care of any issues that happen. If the upload fails, it will save record as a file instead.
 		 * */
 	}
 }

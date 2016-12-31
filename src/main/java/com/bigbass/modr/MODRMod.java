@@ -26,11 +26,13 @@ public class MODRMod {
     @SidedProxy(clientSide = "com.bigbass.modr.proxy.CommonProxy", serverSide = "com.bigbass.modr.proxy.ServerProxy")
     public static CommonProxy proxy;
     
+    public static File serverConfigurationDirectory;
     public static File modConfigurationDirectory;
     
     @Mod.EventHandler
 	public void preInit(FMLPreInitializationEvent e){
-    	modConfigurationDirectory = e.getModConfigurationDirectory();
+    	serverConfigurationDirectory = e.getModConfigurationDirectory();
+    	modConfigurationDirectory = new File(serverConfigurationDirectory.getPath() + "/MODR");
     	
 		proxy.preInit(e);
     }

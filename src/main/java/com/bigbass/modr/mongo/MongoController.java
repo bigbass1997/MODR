@@ -1,5 +1,12 @@
 package com.bigbass.modr.mongo;
 
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
+
 import org.bson.Document;
 
 import com.bigbass.modr.MODRMod;
@@ -105,6 +112,18 @@ public class MongoController extends Thread {
 	
 	private void writeRecordToFile(){
 		MODRMod.log.error("Attempting to write data record to file...");
-		//TODO write handlerQueue to file
+		String dateTime = ZonedDateTime.now(ZoneId.of("UTC")).format(DateTimeFormatter.ofPattern("uuuu-MM-dd_HH-mm-ss.json"));
+		File file = new File(MODRMod.serverConfigurationDirectory.getParent() + "/MODR-Records/" + dateTime);
+		
+		try {
+			FileWriter writer = new FileWriter(file);
+			writer.write(handlerQueue.formatToJsonPretty());
+			writer.close();
+			
+			MODRMod.log.info("Successfully wrote data record to file.");
+		} catch (IOException e) {
+			MODRMod.log.warn("Exception occured, data record may not have been written to a file!");
+			e.printStackTrace();
+		}
 	}
 }
