@@ -10,9 +10,10 @@ import java.util.List;
 public class RecordDataObject {
 	
 	public List<DimensionDataObject> dimensionList;
-	public String dateTime;
+	public PopTime time;
 	
 	public RecordDataObject(){
 		dimensionList = new ArrayList<DimensionDataObject>();
+		time = new PopTime();
 	}
 }

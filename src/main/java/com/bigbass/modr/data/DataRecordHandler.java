@@ -6,12 +6,15 @@ import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 import com.bigbass.modr.MODRMod;
+import com.bigbass.modr.util.PopulationTimeTracker;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 import cpw.mods.fml.common.FMLCommonHandler;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.WorldServer;
 import net.minecraft.world.chunk.Chunk;
@@ -105,7 +108,24 @@ public class DataRecordHandler {
 			}
 			
 			for(Object obj : world.loadedEntityList){
-				if(obj instanceof Entity){
+				if(obj instanceof EntityItem){
+					EntityItem entityItem = (EntityItem) obj;
+					ItemStack stack = entityItem.getEntityItem();
+					 
+					EntityItemDataObject entityItemData = new EntityItemDataObject();
+					
+					entityItemData.name = entityItem.getClass().toString();
+					entityItemData.x = entityItem.posX;
+					entityItemData.y = entityItem.posY;
+					entityItemData.z = entityItem.posZ;
+					
+					entityItemData.itemStack.unlocalizedName = stack.getItem().getUnlocalizedName();
+					entityItemData.itemStack.localizedName = stack.getDisplayName();
+					entityItemData.itemStack.stackSize = stack.stackSize;
+					entityItemData.itemStack.maxStackSize = stack.getMaxStackSize();
+
+					dimData.entityList.add(entityItemData);
+				}else if(obj instanceof Entity){
 					Entity entity = (Entity) obj;
 					EntityDataObject entityData = new EntityDataObject();
 					
@@ -123,11 +143,14 @@ public class DataRecordHandler {
 		
 		//Mark the record with a date and time of UTC timezone.
 		
-		record.dateTime = ZonedDateTime.now(ZoneId.of("UTC")).format(DateTimeFormatter.ofPattern("uuuu/MM/dd HH:mm:ss"));
+		record.time.dateTime = ZonedDateTime.now(ZoneId.of("UTC")).format(DateTimeFormatter.ofPattern("uuuu/MM/dd HH:mm:ss"));
+		record.time.timeLag = (System.currentTimeMillis() - startTime);
 		
 		isPopulated = true;
 		
-		MODRMod.log.info("DataRecord populated in " + ((System.currentTimeMillis() - startTime) / 1000.0f) + " seconds");
+		PopulationTimeTracker.getInstance().timesList.add(record.time);
+		
+		MODRMod.log.info("DataRecord populated in " + record.time.timeLag + "ms");
 	}
 	
 	public String formatToJson(){
