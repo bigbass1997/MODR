@@ -84,6 +84,10 @@ public class MongoController extends Thread {
 					MODRMod.log.error("Uploading data record to database has failed!");
 					e.printStackTrace();
 					writeRecordToFile();
+				} catch(NullPointerException e) {
+					MODRMod.log.error("Uploading data record to database has failed!");
+					e.printStackTrace();
+					writeRecordToFile();
 				}
 				
 				handlerQueue = null;
@@ -122,6 +126,9 @@ public class MongoController extends Thread {
 			
 			MODRMod.log.info("Successfully wrote data record to file.");
 		} catch (IOException e) {
+			MODRMod.log.warn("Exception occured, data record may not have been written to a file!");
+			e.printStackTrace();
+		} catch (NullPointerException e){
 			MODRMod.log.warn("Exception occured, data record may not have been written to a file!");
 			e.printStackTrace();
 		}

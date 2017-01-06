@@ -85,9 +85,9 @@ public class DataRecordHandler {
 					
 					playerData.username = player.getDisplayName();
 					playerData.uuid = player.getUniqueID();
-					playerData.x = player.posX;
-					playerData.y = player.posY;
-					playerData.z = player.posZ;
+					playerData.x = filterInfNaN(player.posX);
+					playerData.y = filterInfNaN(player.posY);
+					playerData.z = filterInfNaN(player.posZ);
 					
 					dimData.playerList.add(playerData);
 				}
@@ -115,9 +115,9 @@ public class DataRecordHandler {
 					EntityItemDataObject entityItemData = new EntityItemDataObject();
 					
 					entityItemData.name = entityItem.getClass().toString();
-					entityItemData.x = entityItem.posX;
-					entityItemData.y = entityItem.posY;
-					entityItemData.z = entityItem.posZ;
+					entityItemData.x = filterInfNaN(entityItem.posX);
+					entityItemData.y = filterInfNaN(entityItem.posY);
+					entityItemData.z = filterInfNaN(entityItem.posZ);
 					
 					entityItemData.itemStack.unlocalizedName = stack.getItem().getUnlocalizedName();
 					entityItemData.itemStack.localizedName = stack.getDisplayName();
@@ -130,9 +130,9 @@ public class DataRecordHandler {
 					EntityDataObject entityData = new EntityDataObject();
 					
 					entityData.name = entity.getClass().toString();
-					entityData.x = entity.posX;
-					entityData.y = entity.posY;
-					entityData.z = entity.posZ;
+					entityData.x = filterInfNaN(entity.posX);
+					entityData.y = filterInfNaN(entity.posY);
+					entityData.z = filterInfNaN(entity.posZ);
 					
 					dimData.entityList.add(entityData);
 				}
@@ -153,15 +153,32 @@ public class DataRecordHandler {
 		MODRMod.log.info("DataRecord populated in " + record.time.timeLag + "ms");
 	}
 	
+	private double filterInfNaN(double val){
+		if(Double.isFinite(val)){
+			return val;
+		} else {
+			return Double.MAX_VALUE - 1;
+		}
+	}
+	
 	public String formatToJson(){
 		Gson gson = (new GsonBuilder()).create();
-		
-		return gson.toJson(record);
+		try {
+			return gson.toJson(record);
+		} catch(Exception e){
+			e.printStackTrace();
+			return null;
+		}
 	}
 	
 	public String formatToJsonPretty(){
 		Gson gson = new GsonBuilder().setPrettyPrinting().create();
 		
-		return gson.toJson(record);
+		try {
+			return gson.toJson(record);
+		} catch(Exception e){
+			e.printStackTrace();
+			return null;
+		}
 	}
 }
